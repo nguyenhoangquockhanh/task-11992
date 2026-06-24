@@ -114,6 +114,37 @@ function Home() {
               <span className="is-active"></span>
               <span></span>
             </div>
+            <div className="container hero__features-wrap">
+        <div className="features-bar">
+          <div className="feature-item">
+            <img src="assets/icon-discount.png" alt=""/>
+            <div>
+              <h4>Discount</h4>
+              <p>Every week new sales</p>
+            </div>
+          </div>
+          <div className="feature-item">
+            <img src="assets/icon-delivery.png" alt=""/>
+            <div>
+              <h4>Free Delivery</h4>
+              <p>100% Free for all orders</p>
+            </div>
+          </div>
+          <div className="feature-item">
+            <img src="assets/icon-support.png" alt=""/>
+            <div>
+              <h4>Great Support 24/7</h4>
+              <p>We care your experiences</p>
+            </div>
+          </div>
+          <div className="feature-item">
+            <img src="assets/icon-secure.png" alt=""/>
+            <div>
+              <h4>Secure Payment</h4>
+              <p>100% Secure Payment Method</p>
+            </div>
+          </div>
+        </div>
           </div>
         </div>
       </section>
