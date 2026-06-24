@@ -144,6 +144,7 @@ function Home() {
               <p>100% Secure Payment Method</p>
             </div>
           </div>
+          </div>
         </div>
           </div>
         </div>
