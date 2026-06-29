@@ -1,7 +1,46 @@
 import React from "react";
 import "./style.css";
 
+// Dữ liệu từng slide — thêm bao nhiêu slide tuỳ ý
+const SLIDES = [
+  {
+    eyebrow: "WELCOME TO CHAIRY",
+    title: "Best Furniture Collection For Your Interior.",
+    btnText: "Shop Now",
+    chairImg: "assets/hero-chair.png",
+    badgeImg: "assets/badge-discount.png",
+  },
+  {
+    eyebrow: "NEW ARRIVALS 2024",
+    title: "Discover Modern Chairs For Every Space.",
+    btnText: "Explore Now",
+    chairImg: "assets/hero-chair.png",   // thay ảnh khác nếu có
+    badgeImg: "assets/badge-discount.png",
+  },
+  {
+    eyebrow: "SPECIAL OFFER",
+    title: "Premium Comfort At The Best Price.",
+    btnText: "Get Offer",
+    chairImg: "assets/hero-chair.png",
+    badgeImg: "assets/badge-discount.png",
+  },
+];
+
+// Chỉ 1 function Home duy nhất
 function Home() {
+  const [current, setCurrent] = useState(0);
+  const total = SLIDES.length;
+
+  const goTo = (index) => {
+    setCurrent((index + total) % total);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % total);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [total]);
   return (
     <div>
       {/* TOP BAR */}
@@ -73,82 +112,101 @@ function Home() {
         </div>
       </nav>
 
-      {/* HERO SECTION */}
-      <section className="hero">
-        <div className="hero__wrap">
-          <div className="hero__banner">
-            <button type="button" className="hero__arrow hero__arrow--left" aria-label="Previous slide">
-              <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="52" height="52" rx="26" fill="white"/>
-                <path d="M22.5 30.5L18 26L22.5 21.5M18 26H34" stroke="#007580" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+{/* HERO SECTION */}
+<section className="hero">
+  <div className="hero__wrap">
+    <div className="hero__banner">
 
-            <div className="hero__content">
-              <div className="hero__text">
-                <p className="hero__eyebrow">WELCOME TO CHAIRY</p>
-                <h1>Best Furniture Collection For Your Interior.</h1>
-                <a href="#" className="hero__btn">
-                  Shop Now
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.5 16.5L20 12L15.5 7.5M20 12H4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </a>
-              </div>
-              <div className="hero__visual">
-                <div className="hero__circle"></div>
-                <img src="assets/hero-chair.png" alt="Modern accent chair" className="hero__chair" />
-                <img src="assets/badge-discount.png" alt="54% Discount" className="hero__badge" />
-              </div>
-            </div>
+      {/* Nút arrow TRÁI */}
+      <button
+        type="button"
+        className="hero__arrow hero__arrow--left"
+        aria-label="Previous slide"
+        onClick={() => goTo(current - 1)}
+      >
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="52" height="52" rx="26" fill="white"/>
+          <path d="M22.5 30.5L18 26L22.5 21.5M18 26H34" stroke="#007580" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
 
-            <button type="button" className="hero__arrow hero__arrow--right" aria-label="Next slide">
-              <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="52" height="52" rx="26" transform="matrix(-1 0 0 1 52 0)" fill="white"/>
-                <path d="M29.5 30.5L34 26L29.5 21.5M34 26H18" stroke="#007580" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+      {/* Nội dung slide — render theo SLIDES[current] */}
+      <div className="hero__content">
+        <div className="hero__text">
+          <p className="hero__eyebrow">{SLIDES[current].eyebrow}</p>
+          <h1>{SLIDES[current].title}</h1>
+          <a href="#" className="hero__btn">
+            {SLIDES[current].btnText}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.5 16.5L20 12L15.5 7.5M20 12H4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <div className="hero__visual">
+          <div className="hero__circle"></div>
+          <img
+            src={SLIDES[current].chairImg}
+            alt="Modern accent chair"
+            className="hero__chair"
+          />
+          <img
+            src={SLIDES[current].badgeImg}
+            alt="54% Discount"
+            className="hero__badge"
+          />
+        </div>
+      </div>
 
-            <div className="hero__dots">
-              <span></span>
-              <span className="is-active"></span>
-              <span></span>
-            </div>
-            <div className="container hero__features-wrap">
+      {/* Nút arrow PHẢI */}
+      <button
+        type="button"
+        className="hero__arrow hero__arrow--right"
+        aria-label="Next slide"
+        onClick={() => goTo(current + 1)}
+      >
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="52" height="52" rx="26" transform="matrix(-1 0 0 1 52 0)" fill="white"/>
+          <path d="M29.5 30.5L34 26L29.5 21.5M34 26H18" stroke="#007580" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Dots — click để nhảy đến slide bất kỳ */}
+      <div className="hero__dots">
+        {SLIDES.map((_, i) => (
+          <span
+            key={i}
+            className={i === current ? "is-active" : ""}
+            onClick={() => goTo(i)}
+            style={{ cursor: "pointer" }}
+          />
+        ))}
+      </div>
+
+      {/* Features bar giữ nguyên */}
+      <div className="container hero__features-wrap">
         <div className="features-bar">
           <div className="feature-item">
             <img src="assets/icon-discount.png" alt=""/>
-            <div>
-              <h4>Discount</h4>
-              <p>Every week new sales</p>
-            </div>
+            <div><h4>Discount</h4><p>Every week new sales</p></div>
           </div>
           <div className="feature-item">
             <img src="assets/icon-delivery.png" alt=""/>
-            <div>
-              <h4>Free Delivery</h4>
-              <p>100% Free for all orders</p>
-            </div>
+            <div><h4>Free Delivery</h4><p>100% Free for all orders</p></div>
           </div>
           <div className="feature-item">
             <img src="assets/icon-support.png" alt=""/>
-            <div>
-              <h4>Great Support 24/7</h4>
-              <p>We care your experiences</p>
-            </div>
+            <div><h4>Great Support 24/7</h4><p>We care your experiences</p></div>
           </div>
           <div className="feature-item">
             <img src="assets/icon-secure.png" alt=""/>
-            <div>
-              <h4>Secure Payment</h4>
-              <p>100% Secure Payment Method</p>
-            </div>
-          </div>
+            <div><h4>Secure Payment</h4><p>100% Secure Payment Method</p></div>
           </div>
         </div>
-          </div>
-        </div>
-      </section>
+      </div>
+
+    </div>
+  </div>
+</section>
 
       {/* BRANDS */}
       <section className="brands">
