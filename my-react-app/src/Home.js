@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./style.css";
 import useEmblaCarousel from "embla-carousel-react";
 
@@ -52,6 +52,27 @@ function Home() {
     }, 4000);
     return () => clearInterval(timer);
   }, [total]);
+  const [featuredRef, featuredApi] = useEmblaCarousel({
+    align: "start",
+    loop: false,
+    slidesToScroll: 1,
+  });
+
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
+
+  const onFeaturedSelect = useCallback((api) => {
+    setCanScrollPrev(api.canScrollPrev());
+    setCanScrollNext(api.canScrollNext());
+  }, []);
+
+  useEffect(() => {
+    if (!featuredApi) return;
+    onFeaturedSelect(featuredApi);
+    featuredApi.on("select", onFeaturedSelect);
+    featuredApi.on("reInit", onFeaturedSelect);
+  }, [featuredApi, onFeaturedSelect]);
+  // ↑↑↑ KẾT THÚC ĐOẠN THÊM ↑↑↑
   return (
     <div>
       {/* TOP BAR */}
@@ -238,76 +259,66 @@ function Home() {
           <div className="section__head">
             <h2>Featured Products</h2>
             <div className="nav-arrows">
-              <button type="button" className="nav-arrows__btn nav-arrows__btn--active" aria-label="Previous">&#8592;</button>
-              <button type="button" className="nav-arrows__btn" aria-label="Next">&#8594;</button>
+              <button
+                type="button"
+                className={`nav-arrows__btn ${canScrollPrev ? "nav-arrows__btn--active" : ""}`}
+                aria-label="Previous"
+                onClick={() => featuredApi && featuredApi.scrollPrev()}
+                disabled={!canScrollPrev}
+              >
+                &#8592;
+              </button>
+              <button
+                type="button"
+                className={`nav-arrows__btn ${canScrollNext ? "nav-arrows__btn--active" : ""}`}
+                aria-label="Next"
+                onClick={() => featuredApi && featuredApi.scrollNext()}
+                disabled={!canScrollNext}
+              >
+                &#8594;
+              </button>
             </div>
           </div>
-          <div className="product-grid-viewport">
-            <div className="product-grid product-grid--4">
-              {/* ... copy toàn bộ product-card từ HTML, đổi class -> className */}
-              {/*<!-- Product 1 -->*/}
-              <article className="product-card">
-                <div className="product-card__image">
-                  <span className="tag tag--new">New</span>
-                  <button type="button" className="wishlist-btn">
-                    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="44" height="44" rx="8" fill="white" fill-opacity="0.8" />
-                      <path fill-rule="evenodd" clip-rule="evenodd" d="M13.6327 21.6315C12.6491 18.5607 13.7977 15.0508 17.0225 14.0122C17.8587 13.7446 18.7468 13.6809 19.6127 13.8263C20.4785 13.9717 21.2971 14.3221 22 14.8482C23.3338 13.8169 25.2743 13.4686 26.9683 14.0122C30.1923 15.0508 31.3491 18.5607 30.3664 21.6315C28.8356 26.499 22 30.2482 22 30.2482C22 30.2482 15.2148 26.5558 13.6327 21.6315V21.6315Z" stroke="#272343" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </button>
-                  <img src="assets/product-1.png" alt="Library Stool Chair" />
-                </div>
-                <div className="product-card__info">
-                  <div>
-                    <a href="#" className="product-card__name product-card__name--link">Library Stool Chair</a>
-                    <p className="price">$20</p>
-                  </div>
-                  <button type="button" className="add-cart-btn add-cart-btn--active"><img src="assets/icon-cart.png" alt="" /></button>
-                </div>
-              </article>
 
-              {/*<!-- Product 2 -->*/}
-              <article className="product-card">
-                <div className="product-card__image">
-                  <span className="tag tag--sale">Sales</span>
-                  <img src="assets/product-2.png" alt="Library Stool Chair" />
-                </div>
-                <div className="product-card__info">
-                  <div>
-                    <p className="product-card__name">Library Stool Chair</p>
-                    <p className="price">$20 <span className="price--old">$30</span></p>
+          <div className="embla embla--featured" ref={featuredRef}>
+            <div className="embla__container">
+              {FEATURED_PRODUCTS.map((p) => (
+                <article className="embla__slide product-card" key={p.id}>
+                  <div className="product-card__image">
+                    {p.tag === "new" && <span className="tag tag--new">New</span>}
+                    {p.tag === "sale" && <span className="tag tag--sale">Sales</span>}
+                    {p.tag === "new" && (
+                      <button type="button" className="wishlist-btn">
+                        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="44" height="44" rx="8" fill="white" fillOpacity="0.8" />
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M13.6327 21.6315C12.6491 18.5607 13.7977 15.0508 17.0225 14.0122C17.8587 13.7446 18.7468 13.6809 19.6127 13.8263C20.4785 13.9717 21.2971 14.3221 22 14.8482C23.3338 13.8169 25.2743 13.4686 26.9683 14.0122C30.1923 15.0508 31.3491 18.5607 30.3664 21.6315C28.8356 26.499 22 30.2482 22 30.2482C22 30.2482 15.2148 26.5558 13.6327 21.6315V21.6315Z"
+                            stroke="#272343"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                    <img src={p.img} alt={p.name} />
                   </div>
-                  <button type="button" class="add-cart-btn"><img src="assets/icon-cart.png" alt="" /></button>
-                </div>
-              </article>
-
-              {/*<!-- Product 3 -->*/}
-              <article className="product-card">
-                <div className="product-card__image">
-                  <img src="assets/product-3.png" alt="Library Stool Chair" />
-                </div>
-                <div className="product-card__info">
-                  <div>
-                    <p className="product-card__name">Library Stool Chair</p>
-                    <p className="price">$20</p>
+                  <div className="product-card__info">
+                    <div>
+                      <p className="product-card__name">{p.name}</p>
+                      <p className="price">
+                        {p.price}
+                        {p.oldPrice && <span className="price--old">{p.oldPrice}</span>}
+                      </p>
+                    </div>
+                    <button type="button" className={`add-cart-btn ${p.tag === "new" ? "add-cart-btn--active" : ""}`}>
+                      <img src="assets/icon-cart.png" alt="" />
+                    </button>
                   </div>
-                  <button type="button" className="add-cart-btn"><img src="assets/icon-cart.png" alt="" /></button>
-                </div>
-              </article>
-
-              {/*<!-- Product 4 -->*/}
-              <article className="product-card">
-                <div className="product-card__image">
-                  <img src="assets/product-4.png" alt="Library Stool Chair" />
-                </div>
-                <div className="product-card__info">
-                  <div>
-                    <p className="product-card__name">Library Stool Chair</p>
-                    <p className="price">$20</p>
-                  </div>
-                  <button type="button" className="add-cart-btn"><img src="assets/icon-cart.png" alt="" /></button>
-                </div>
-              </article>
+                </article>
+              ))}
             </div>
           </div>
         </div>

@@ -1651,3 +1651,17 @@ h1,h2,h3,h4,h5,p,a{
   overflow: hidden;
   width: 100%;
 }
+
+.embla {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+  gap: 24px;
+}
+
+.embla--featured .embla__slide {
+  flex: 0 0 calc(25% - 18px); /* 4 thẻ / hàng, trừ gap */
+  min-width: 0;
+}
