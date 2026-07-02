@@ -1646,3 +1646,8 @@ h1,h2,h3,h4,h5,p,a{
     word-wrap:break-word;
     overflow-wrap:break-word;
 }
+
+.product-grid-viewport {
+  overflow: hidden;
+  width: 100%;
+}
